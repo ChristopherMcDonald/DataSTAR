@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.BufferedReader;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.text.DateFormat;
@@ -19,9 +20,13 @@ class TicketWorker implements Runnable{
 	public void run(){
 		Socket socket;
 		PrintWriter writer;
+		String host = "localhost";
+        int port = 8081;
+        InetAddress address;
 		
 		try{
-			socket = Workers.server.accept();
+			address = InetAddress.getByName(host);
+			socket = new Socket(address, port);
 			writer = new PrintWriter(socket.getOutputStream(), true);
 			writer.println(ticket.getDatasetID() + "," + ticket.getResourceName());
 		}catch(IOException ioe){
