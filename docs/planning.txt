@@ -62,10 +62,19 @@ Tickets:
 * Resource name
 * Dataset ID
 
-Client's Request:
+Clients' Request:
+* Takes in directory with possible subdirectories
+* Directory will be flattened once received
+* Subdirectories appended to the beginning of file, use reserved symbol to separate
+* Desired targets as set of strings, optional none
+* Once received, request payment
+* Hold data for some set amount of time if payment not received
+
+Clients' Response:
 * Progress shown incrementally
 * Send full dataset when done, each folder contains the resources marked as that target
 * Generate report containing info such as distribution of data, confidence margins, etc.
+
 
 Pay Scheme:
 
