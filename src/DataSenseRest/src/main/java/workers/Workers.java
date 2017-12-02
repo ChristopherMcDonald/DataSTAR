@@ -2,15 +2,66 @@ package workers;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.io.BufferedReader;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-class TicketAllocationWorker implements Runnable{
+class TicketWorker implements Runnable{
+	private Ticket ticket;
+	
 	@Override
 	public void run(){
-		System.out.println("C-OK");
-		//TODO create with user id, hash on string, add appropriate options for this dataset
+		Socket socket;
+		PrintWriter writer;
+		
+		try{
+			socket = Workers.server.accept();
+			writer = new PrintWriter(socket.getOutputStream(), true);
+			writer.println(ticket.getDatasetID() + "," + ticket.getResourceName());
+		}catch(IOException ioe){
+			ioe.printStackTrace();
+		}
+	}
+	
+	public TicketWorker(Ticket ticket){
+		this.ticket = ticket;
+	}
+}
+
+class RequestListenWorker implements Runnable{
+	@Override
+	public void run(){
+		Socket socket;
+		BufferedReader reader;
+		String tokens[];
+		String annotation;
+		Ticket ticket;
+		
+		System.out.println("RequestListenWorker started.");
+		for(;;){
+			try{
+				socket = Workers.server.accept();
+				reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+				annotation = reader.readLine();
+				tokens = annotation.split(",");
+				if(tokens.length == 1){						//Ticket request
+					ticket = Workers.ticketQueues.get(tokens[0]).peek();
+					new Thread(new TicketWorker(ticket)).start();
+				}else if(tokens.length == 2){
+					Workers.ticketPool.put(tokens[0], DatabaseAccessor.queryDataset(tokens[0]));
+				}else{										//Annotation received
+					Workers.ticketQueues.get(tokens[0]).pop();
+				}
+			}catch(IOException ioe){
+				ioe.printStackTrace();
+			}
+		}
 	}
 }
 
@@ -19,6 +70,7 @@ class TimeoutCheckWorker implements Runnable{
 
 	@Override
 	public void run(){
+		System.out.println("TimeoutCheckWorker started.");
 		for(;;){
 			try{
 				Thread.sleep(PERIOD);
@@ -26,53 +78,17 @@ class TimeoutCheckWorker implements Runnable{
 				for(HashMap.Entry<String, TicketQueue> entry : Workers.ticketQueues.entrySet()){
 					if(entry.getValue().timedOut(Calendar.getInstance())){
 						for(Ticket ticket : entry.getValue().getQueue()){	//Put tickets back into pool
-							Workers.ticketPool.get(ticket.getDatasetID()).add(ticket.getResourceName());
+							Workers.ticketPool.get(ticket.getDatasetID()).add(ticket);
 						}
 						Workers.ticketQueues.replace(entry.getKey(), null);	//Remove this user's queue
 						System.out.println("User: " + entry.getKey() + " timed out.");
 					}
 				}
 
-				System.out.println("Queues checked for timeout at: " + Workers.DF.format(Calendar.getInstance().getTime()));
+				System.out.println("Queues checked for timeout at: "
+						+ Workers.DF.format(Calendar.getInstance().getTime()));
 			}catch(InterruptedException ie){
 				System.out.println("TimeoutCheckWorker experienced an interruption, now exiting.");
-				break;
-			}
-		}
-	}
-}
-
-class UserAnnotationWorker implements Runnable{
-	@Override
-	public void run(){
-		System.out.println("E-OK");
-		//TODO create with annotation confirmation information
-	}
-}
-
-class DatabaseCheckWorker implements Runnable{
-	private static final int MINUTES = 60;
-	private static final long PERIOD =  MINUTES * 60 * 1000 / 6000;
-	private static HashMap<Integer, ArrayList<String>> newQueries;
-
-	@Override
-	public void run(){
-		for(;;){
-			try{
-				Thread.sleep(PERIOD);
-				
-				newQueries = DatabaseAccessor.queryNewTickets();			//Merge new queries into ticket pool
-				if(newQueries != null){
-					for(HashMap.Entry<Integer, ArrayList<String>> entry : newQueries.entrySet()){
-						for(String name : entry.getValue()){
-							Workers.ticketPool.get(entry.getKey()).add(name);
-						}
-					}
-					newQueries = null;
-				}
-				System.out.println("Checked database for new data at: " + Workers.DF.format(Calendar.getInstance().getTime()));
-			}catch(InterruptedException ie){
-				System.out.println("DatabaseCheckWorker experienced an interruption, now exiting.");
 				break;
 			}
 		}
@@ -83,7 +99,8 @@ public class Workers{
 	static final DateFormat DF = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 	static final int MINUTES = 15;
 	static HashMap<String, TicketQueue> ticketQueues;
-	static HashMap<Integer, ArrayList<String>> ticketPool;
+	static HashMap<String, ArrayList<Ticket>> ticketPool;
+	static ServerSocket server;
 
 	public static void main(String[] args){
 		init();
@@ -92,13 +109,14 @@ public class Workers{
 	public static void init(){
 		DatabaseAccessor.refreshTicketCounts();
 		ticketQueues = new HashMap<String, TicketQueue>();
-		ticketPool = DatabaseAccessor.queryNewTickets();
-		new Thread(new DatabaseCheckWorker()).start();
-		new Thread(new TimeoutCheckWorker()).start();
-
-		new Thread(new TicketAllocationWorker()).start();
-		new Thread(new UserAnnotationWorker()).start();
-
-		System.out.println("Threads started!");
+		ticketPool = DatabaseAccessor.initPool();
+		
+		try{
+			server = new ServerSocket(8080);
+			new Thread(new TimeoutCheckWorker()).start();
+			new Thread(new RequestListenWorker()).start();
+		}catch(IOException ioe){
+			ioe.printStackTrace();
+		}
 	}
 }

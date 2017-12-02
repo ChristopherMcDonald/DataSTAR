@@ -11,22 +11,22 @@ class DatasetDispatchWorker implements Runnable{
 
 	@Override
 	public void run(){
-		ArrayList<String> dataset;
-		int previousDatasetID, datasetID;
+		ArrayList<Ticket> dataset;
+		String previousDatasetID, datasetID;
 
 		if(queue.size() > 0){
 			previousDatasetID = queue.getLast().getDatasetID();
 		}else{
-			previousDatasetID = -1;
+			previousDatasetID = "-1";
 		}
 
 		datasetID = getRandomDataSet(previousDatasetID);
-		dataset = Workers.ticketPool.get(datasetID);				//Randomly select a dataset
+		dataset = Workers.ticketPool.get(datasetID);		//Randomly select a dataset
 		for(int i = 0; i < NUM_TO_ADD; i++){
 			if(dataset.size() == 0){
 				break;
 			}
-			queue.add(new Ticket(dataset.remove(0), datasetID));	//Add a batch from the ticketpool to the queue
+			queue.add(dataset.remove(0));					//Add a batch from the ticketpool to the queue
 		}
 	}
 
@@ -34,11 +34,11 @@ class DatasetDispatchWorker implements Runnable{
 		this.queue = queue;
 	}
 
-	private int getRandomDataSet(int previousDatasetID){
-		int[] ids = DatabaseAccessor.queryDatasetIDs();
+	private String getRandomDataSet(String previousDatasetID){
+		String[] ids = DatabaseAccessor.queryDatasetIDs();
 
 		if(ids.length == 0){					//No datasets available...
-			return -1;
+			return "-1";
 		}else if(ids.length == 1){				//Only one dataset available
 			return ids[0];
 		}
@@ -47,7 +47,7 @@ class DatasetDispatchWorker implements Runnable{
 		int rnd;
 		do{										//Go until we've found a different id
 			rnd = r.nextInt(ids.length);
-		}while(ids[rnd] != previousDatasetID);
+		}while(!ids[rnd].equals(previousDatasetID));
 
 		return ids[rnd];
 	}
@@ -74,6 +74,10 @@ public class TicketQueue{
 		if(queue.size() <= MIN_SIZE){
 			new Thread(new DatasetDispatchWorker(queue)).start();
 		}
+	}
+	
+	public Ticket peek(){
+		return queue.peek();
 	}
 
 	public void setTimeout(){
