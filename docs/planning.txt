@@ -1,0 +1,37 @@
+*** IDEAS ***
+Datascription (The Labeler) ($$$) (5 votes)
+	- ML Data labeler allowing easy customization
+	Pros:
+		* Everything is familiar
+		* Flashy
+		* Largest value proposition/fast first sell
+		* Belongs to a track
+		* ML buzz
+	Cons:
+		* Potential for malicious data entry
+		* Difficult Front-End
+
+*** RESPONSIBILITIES ***
+
+Chris:
+- Database design
+- Dev Ops
+- Info Sec
+- Server endpoint creation
+- Marketing Plan
+Eric:
+- Point of Contact
+- Scrum-master
+- Algorithm Design
+- Data Collection
+- ML Design
+Sharon:
+- Morale / Making room not stink
+- Translate design -> Front-end
+- Linking Back-/Front-End
+- Testing/User Feedback
+Desiigner:
+- Design work
+- Market Research (demand, competitors, etc.)
+- Presentation design
+- Whitepaper design
