@@ -12,6 +12,10 @@ apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply plugin: 'org.springframework.boot'
 
+eclipse {
+    project.natures 'org.eclipse.buildship.core.gradleprojectnature'
+}
+
 jar {
     baseName = 'gs-rest-service'
     version =  '0.1.0'
@@ -26,5 +30,6 @@ targetCompatibility = 1.8
 
 dependencies {
     compile("org.springframework.boot:spring-boot-starter-web")
+    compile("org.mongodb:mongo-java-driver:2.12.3")
     testCompile('org.springframework.boot:spring-boot-starter-test')
 }

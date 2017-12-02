@@ -1,6 +1,7 @@
+package workers;
+
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Random;
 

@@ -1,3 +1,5 @@
+package workers;
+
 public class Ticket{
 	private String resourceName;
 	private int datasetID;
