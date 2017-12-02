@@ -2,6 +2,7 @@ module.exports = (app, scrypt) => {
     
     var Client = require('../objects/Client.js');
     var scryptParameters = scrypt.paramsSync(0.1);
+    var net = require('net');
 
     app.post('/clientLogin', (req, res) => {
         console.log(req);
@@ -49,7 +50,8 @@ module.exports = (app, scrypt) => {
             });
     });
     
-    app.post('/client/addLogin', (req, res) => {    
+    app.post('/client/addLogin', (req, res) => {
+        // TODO why is body.id working??!?!?!?!
         Client.findOne({id: req.body.id}).then(client => {
             if(client) {
                 client.logins.push({email: req.body.email, password: scrypt.kdfSync(req.body.password, scryptParameters)});
@@ -69,27 +71,42 @@ module.exports = (app, scrypt) => {
         });
     });
     
-    var multipart = require('connect-multiparty');
-    var multipartMiddleware = multipart();
-    
-    app.post('/client/addData', multipartMiddleware, (req, res) => {
+    app.post('/client/addData', (req, res) => {
         console.log(req);
-        Client.findOne({id: req.body.id}).then(client => {
+
+        Client.findOne({_id: req.body.id}).then(client => {
             if(client) {
                 var toAdd = {};
                 toAdd.type = req.body.type; // string
                 toAdd.options = req.body.options; // [string]
                 toAdd.tier = req.body.tier; // number
                 toAdd.resources = [];
-                // req.files.forEach(file => {
-                //     resources.push({link: file, annotationsPending: toAdd.tier, annotations: []});
-                // });
+                toAdd.timestamp = new Date();
+                var max = 5; // 10, 25
+                if(toAdd.tier == 2) {
+                    max = 10;
+                } else if(toAdd.tier == 3) {
+                    max = 25;
+                }
+                req.body.files.forEach(file => {
+                    toAdd.resources.push({link: file, pending: max, annotations: []});
+                });
                 client.datasets.push(toAdd);
-                client.save((err) => {
+                client.save((err,client) => {
                     if(err) {
-                        res.status(500).json("internal error");
+                        res.status(500).json("internal error " + err);
                     } else {
+                        console.log(client);
                         res.status(202).send({res: "valid"});
+                        var socketC = net.connect(8080, 'localhost');
+                        var mostRecent = datasets[0];
+                        client.datasets.forEach(dataset => {
+                            if(mostRecent > dataset) {
+                                mostRecent = dataset;
+                            }
+                        });
+                        socketC.write("datasetID:" + mostRecent.id);
+                        socketC.end();
                     }
                 });
             } else {

@@ -1,7 +1,9 @@
 module.exports = (app, scrypt) => {
     
     var User = require('../objects/User.js');
+    var Client = require('../objects/Client.js');
     var scryptParameters = scrypt.paramsSync(0.1);
+    var net = require('net');
 
     app.post('/login', (req, res) => {
         User.findOne({email: req.body.email.toLowerCase()}).then(user => {
@@ -67,6 +69,37 @@ module.exports = (app, scrypt) => {
             console.log(err);
             res.status(500).json("internal error");
         });
+    });
+    
+    app.get('/next', (req, res) => {
+        // takes in userID
+        var client = net.connect(8080, 'localhost');
+        client.write(req.body.userId);
+        client.on('data', (data) => {
+            Client.find({"datasets.id": data.datasetId}, (err, client) => {
+                if(client) {
+                    client.datasets.forEach(dataset => {
+                        if(dataset.id === data.datasetId) {
+                            res.status(200).send({res: "valid", ticket: data}); // add datasetID, resourcename
+                        } else {
+                            res.status(500).send("internal error");
+                        }
+                    });
+                } else {
+                    console.error("NOT VALID DATASET ID " + data.datasetId);
+                }
+                
+            });
+            
+            client.end();
+        });
+    });
+    
+    app.post('/annotate', (req, res) => {
+        // take in a userID, datasetID, resourceID and confirm
+        var client = net.connect(8080, 'localhost');
+        client.write(req.body.userId + "," + req.body.resourceName + "," + req.body.datasetID + "," + req.body.label);
+        client.end();
     });
     
     // TODO increase cash balance
