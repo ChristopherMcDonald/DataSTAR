@@ -36,7 +36,7 @@
       <div class="collapse navbar-collapse" id="navbarResponsive">
         <ul class="navbar-nav mx-auto">
           <li class="nav-item px-lg-3">
-            <a class="nav-link active text-uppercase text-expanded" href="clientHome.html">Home
+            <a class="nav-link text-uppercase text-expanded" href="clientHome.html">Home
               <span class="sr-only">(current)</span>
             </a>
           </li>
@@ -47,7 +47,7 @@
             <a class="nav-link text-uppercase text-expanded" href="clientProfile.html">Profile</a>
           </li>
           <li class="nav-item px-lg-3">
-            <a class="nav-link text-uppercase text-expanded" href="clientDatasets.html">Datasets</a>
+            <a class="nav-link active text-uppercase text-expanded" href="clientDatasets.html">Datasets</a>
           </li>
         </ul>
       </div>
@@ -59,11 +59,46 @@
       <div class="bg-faded p-4 my-4">
         <hr class="divider">
         <div class="text-center mt-3">
-            <h3>Client Home</h3>
-          </div>
+            <h3>Your Datasets</h3>
+        </div>
         <hr class="divider">
+        <div class="text-center">
+            <a href="newDataset.html"><button class="btn btn-primary">New Dataset</button></a>            
+        </div>
+        <div class="row">
+          <table style="width:100%">
+              <tr>
+                <td>Dataset #1</td>
+                <td>
+                  <div id="myProgress">
+                    <div id="myBar">                       </div>
+                  </div>
+                </td>
+                <td><button class="btn btn-success">Retreieve</button></td>
+              </tr>
+              <tr>
+                  <td>Dataset #2</td>
+                  <td>
+                    <div id="myProgress">
+                      <div id="myBar"></div>
+                    </div>
+                  </td>
+                  <td><button class="btn btn-success">Retreieve</button></td>
+                </tr>
+                <tr>
+                    <td>Dataset #3</td>
+                    <td>
+                      <div id="myProgress">
+                        <div id="myBar"></div>
+                      </div>
+                    </td>
+                    <td><button class="btn btn-success">Retreieve</button></td>
+                  </tr>
+            </table>
+          </div>
       </div>
     </div>
+    
 
 
     <footer class="bg-faded text-center py-3">
@@ -75,6 +110,7 @@
     <!-- Bootstrap core JavaScript -->
     <script src="../vendor/jquery/jquery.min.js"></script>
     <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/clientDatasets.js"></script>
 
   </body>
 

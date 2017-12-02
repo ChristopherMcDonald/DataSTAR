@@ -5537,7 +5537,7 @@ button.close {
   -ms-flex-pack: center;
       justify-content: center;
   width: 15%;
-  color: #fff;
+  color: #0000;
   text-align: center;
   opacity: 0.5;
 }
