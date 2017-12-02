@@ -1,14 +1,14 @@
 const express = require('express');
 const app = express();
 
-// var bodyParser = require('body-parser');
-// app.use(bodyParser.json());
-var formidable = require('express-formidable');
-app.use(formidable({
-    encoding: 'utf-8',
-    uploadDir: '/upload/',
-    multiples: true
-}));
+var bodyParser = require('body-parser');
+app.use(bodyParser.json());
+// var formidable = require('express-formidable');
+// app.use(formidable({
+//     encoding: 'utf-8',
+//     uploadDir: '/upload/',
+//     multiples: true
+// }));
 
 var mongoose = require('mongoose');
 mongoose.Promise = global.Promise;

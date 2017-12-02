@@ -5,10 +5,10 @@ module.exports = (app, scrypt) => {
 
     app.post('/clientLogin', (req, res) => {
         console.log(req);
-        Client.findOne({"logins.email": req.fields.email.toLowerCase()}).then(client => {
+        Client.findOne({"logins.email": req.body.email.toLowerCase()}).then(client => {
             if(client) {
-                var loginInfo = client.logins.filter(login => login.email === req.fields.email.toLowerCase())[0];
-                if(scrypt.verifyKdfSync(loginInfo.password, req.fields.password)) {
+                var loginInfo = client.logins.filter(login => login.email === req.body.email.toLowerCase())[0];
+                if(scrypt.verifyKdfSync(loginInfo.password, req.body.password)) {
                     res.status(202).send({res: "valid", id: loginInfo._id});
                 } else res.status(401).send({description: "bad credentials"});
             }
@@ -34,8 +34,8 @@ module.exports = (app, scrypt) => {
     
     app.post('/client', (req, res) => {
         var client = new Client({
-            coname: req.fields.name,
-            logins: [{email: req.fields.email.toLowerCase(), password: scrypt.kdfSync(req.fields.password, scryptParameters)}],
+            coname: req.body.name,
+            logins: [{email: req.body.email.toLowerCase(), password: scrypt.kdfSync(req.body.password, scryptParameters)}],
             datasets: []
         });
         
@@ -50,9 +50,9 @@ module.exports = (app, scrypt) => {
     });
     
     app.post('/client/addLogin', (req, res) => {    
-        Client.findOne({id: req.fields.id}).then(client => {
+        Client.findOne({id: req.body.id}).then(client => {
             if(client) {
-                client.logins.push({email: req.fields.email, password: scrypt.kdfSync(req.fields.password, scryptParameters)});
+                client.logins.push({email: req.body.email, password: scrypt.kdfSync(req.body.password, scryptParameters)});
                 client.save((err) => {
                     if(err) {
                         res.status(500).json("internal error");
@@ -69,19 +69,21 @@ module.exports = (app, scrypt) => {
         });
     });
     
-    app.post('client-add', (req, res) => {
-        console.log("dddddd");
+    var multipart = require('connect-multiparty');
+    var multipartMiddleware = multipart();
+    
+    app.post('/client/addData', multipartMiddleware, (req, res) => {
         console.log(req);
-        Client.findOne({id: req.fields.id}).then(client => {
+        Client.findOne({id: req.body.id}).then(client => {
             if(client) {
                 var toAdd = {};
-                toAdd.type = req.fields.type; // string
-                toAdd.options = req.fields.options; // [string]
-                toAdd.tier = req.fields.tier; // number
+                toAdd.type = req.body.type; // string
+                toAdd.options = req.body.options; // [string]
+                toAdd.tier = req.body.tier; // number
                 toAdd.resources = [];
-                req.files.forEach(file => {
-                    resources.push({link: file, annotationsPending: toAdd.tier, annotations: []});
-                });
+                // req.files.forEach(file => {
+                //     resources.push({link: file, annotationsPending: toAdd.tier, annotations: []});
+                // });
                 client.datasets.push(toAdd);
                 client.save((err) => {
                     if(err) {
@@ -97,9 +99,5 @@ module.exports = (app, scrypt) => {
             console.log(err);
             res.status(500).json("internal error");
         });
-    });
-    
-    app.get("test", (req, res) => {
-        res.status(200).send("you good.");
     });
 }
