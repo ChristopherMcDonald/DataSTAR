@@ -97,10 +97,33 @@ module.exports = (app, scrypt) => {
     
     app.post('/annotate', (req, res) => {
         // take in a userID, datasetID, resourceID and confirm
+        User.findOne({id:req.body.userId}, (err, user) => {
+            if(!user) res.status(404).send({res: "invalid", reason: "not found"});
+            else {
+                Clients.find({"dataset.id": req.body.datasetID}, (err, client) => {
+                    var sets = client.datasets.filter(set => set.id === req.body.datasetID);
+                    // TODO fix below assumption
+                    // assume only one set is returned
+                    var type = sets[0].type;
+                    if(type === "images") {
+                        user.cash += 0.003;
+                    } else if(type === "videos") {
+                        user.cash += 0.006;
+                    } else if(type === "text") {
+                        user.cash += 0.0045;
+                    } else if(type === "audio") {
+                        user.cash += 0.006; // TODO make relative to length of video/audio
+                    }
+                    
+                    user.save((err,user) => {
+                        if(err) res.status(500).send("unhandled error");
+                        else res.status(200).send({res: "valid"});
+                    });
+                });
+            }
+        });
         var client = net.connect(8080, 'localhost');
         client.write(req.body.userId + "," + req.body.resourceName + "," + req.body.datasetID + "," + req.body.label);
         client.end();
     });
-    
-    // TODO increase cash balance
 }

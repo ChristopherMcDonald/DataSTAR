@@ -35,7 +35,7 @@ module.exports = (app, scrypt) => {
     
     app.post('/client', (req, res) => {
         var client = new Client({
-            coname: req.body.name,
+            coname: req.body.coname,
             logins: [{email: req.body.email.toLowerCase(), password: scrypt.kdfSync(req.body.password, scryptParameters)}],
             datasets: []
         });
@@ -92,19 +92,21 @@ module.exports = (app, scrypt) => {
                     toAdd.resources.push({link: file, pending: max, annotations: []});
                 });
                 client.datasets.push(toAdd);
-                client.save((err,client) => {
+                client.markModified('object');
+                client.save((err,newclient) => {
                     if(err) {
                         res.status(500).json("internal error " + err);
                     } else {
-                        console.log(client);
+                        console.log(newclient);
                         res.status(202).send({res: "valid"});
                         var socketC = net.connect(8080, 'localhost');
-                        var mostRecent = datasets[0];
-                        client.datasets.forEach(dataset => {
+                        var mostRecent = newclient.datasets[0];
+                        newclient.datasets.forEach(dataset => {
                             if(mostRecent > dataset) {
                                 mostRecent = dataset;
                             }
                         });
+                        console.log("throwing " + mostRecent.id + " at java");
                         socketC.write("datasetID:" + mostRecent.id);
                         socketC.end();
                     }
