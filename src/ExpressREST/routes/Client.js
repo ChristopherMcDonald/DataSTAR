@@ -107,7 +107,7 @@ module.exports = (app, scrypt) => {
                             }
                         });
                         console.log("throwing " + mostRecent.id + " at java");
-                        socketC.write("datasetID:" + mostRecent.id);
+                        socketC.write(mostRecent.id + ",0");
                         socketC.end();
                     }
                 });

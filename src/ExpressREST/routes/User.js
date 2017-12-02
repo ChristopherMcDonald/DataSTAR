@@ -74,7 +74,8 @@ module.exports = (app, scrypt) => {
     app.get('/next', (req, res) => {
         // takes in userID
         var client = net.connect(8080, 'localhost');
-        client.write(req.body.userId);
+        client.write(req.query.userId);
+        
         client.on('data', (data) => {
             Client.find({"datasets.id": data.datasetId}, (err, client) => {
                 if(client) {
@@ -90,9 +91,8 @@ module.exports = (app, scrypt) => {
                 }
                 
             });
-            
-            client.end();
         });
+        client.end();
     });
     
     app.post('/annotate', (req, res) => {

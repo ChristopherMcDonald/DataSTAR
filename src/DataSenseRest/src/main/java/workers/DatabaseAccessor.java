@@ -4,12 +4,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.bson.types.ObjectId;
+
+import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
+import com.mongodb.util.JSON;
 
 public class DatabaseAccessor{
 	private static DB database;
@@ -40,8 +44,9 @@ public class DatabaseAccessor{
 		int numComplete, tier;
 		
 		for(DBObject client : collection.find()){
-			for(DBObject dataset : (DBObject[])client.get("datasets")){
-				tier = (int)dataset.get("tier");
+			for(Object datasetItem : (BasicDBList) client.get("datasets")){
+				DBObject dataset = (DBObject) datasetItem;
+				tier = Integer.parseInt(dataset.get("tier").toString());
 				if(tier == 1){					//Converting the tiers
 					tier = 5;
 				}else if(tier == 2){
@@ -49,8 +54,9 @@ public class DatabaseAccessor{
 				}else{
 					tier = 25;
 				}
-				for(DBObject resource : (DBObject[])dataset.get("resources")){
-					numComplete = ((DBObject[])resource.get("annotations")).length;
+				for(Object resourceItem : (BasicDBList)dataset.get("resources")){
+					DBObject resource = (DBObject) resourceItem;
+					numComplete = ((BasicDBList)resource.get("annotations")).size();
 					if(tier != numComplete + (int)resource.get("pending")){
 						resource.put("pending", numComplete + (int)resource.get("pending"));
 						collection.update(resource, resource);
@@ -67,17 +73,19 @@ public class DatabaseAccessor{
 	 */
 	public static ArrayList<Ticket> queryDataset(String datasetID){
 		DBCollection collection = database.getCollection("clients");
-		BasicDBObject query = new BasicDBObject(), update = new BasicDBObject();
+		BasicDBObject query = new BasicDBObject();
 		ArrayList<Ticket> tickets = new ArrayList<Ticket>();
 		
-		query.put("datasets.id", datasetID);
-		update.put("datasets.resources.pending", 0);
-		for(DBObject resource : (DBObject[])collection.find(query).one().get("resources")){
+		query.put("datasets._id", new ObjectId(datasetID));
+		DBObject dbo = collection.find(query).one();
+		for(Object resourceObj : ((BasicDBList)((DBObject)((BasicDBList)dbo.get("datasets")).get(0)).get("resources"))){
+			DBObject resource = (DBObject) resourceObj;
 			for(int i = 0; i < (int)resource.get("pending"); i++){
 				tickets.add(new Ticket((String)resource.get("link"), datasetID));
 			}
+			resource.put("pending", 0);
 		}
-		collection.findAndModify(query, update);
+		collection.save(dbo);
 		return tickets;
 	}
 	
