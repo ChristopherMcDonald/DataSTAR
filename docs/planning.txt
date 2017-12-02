@@ -35,3 +35,43 @@ Desiigner:
 - Market Research (demand, competitors, etc.)
 - Presentation design
 - Whitepaper design
+
+
+*** DataGold/DataSense/DataSource ***
+
+Ticket Allocation Workers:
+* Maintain a queue per user
+* Users request their next ticket from this list
+* Response combines ticket and info about potential targets for their ticket
+* When queue has 5 or less, the dispatch worker is called to append to the queue
+* Each queue remembers the previous ticket until confirmation of completion is received
+* If the user times out, their last ticket and all in the queue are returned to the ticket pool
+* Pops head of queue when confirmation received
+
+Dispatch Worker:
+* Receives a clientID and a previous dataset (can be null)
+* Randomly selects new dataset to pick from
+* Companies can pay a premium to make their dataset more likely to be selected
+* Appends 15 (or less if less available) tickets from that set's ticket pool to the user's queue
+
+User Annotation Worker:
+
+Timeout Check Worker:
+
+Tickets:
+* Resource name
+* Dataset ID
+
+Client's Request:
+* Progress shown incrementally
+* Send full dataset when done, each folder contains the resources marked as that target
+* Generate report containing info such as distribution of data, confidence margins, etc.
+
+Pay Scheme:
+
+User Payout System:
+
+Dataset:
+
+Interface:
+* Auto-complete text field if > 10 (or whatever arbitrary number)
