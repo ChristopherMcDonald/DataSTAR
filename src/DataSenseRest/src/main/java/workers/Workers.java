@@ -42,6 +42,7 @@ class RequestListenWorker implements Runnable{
 		String tokens[];
 		String annotation;
 		Ticket ticket;
+		final int TIMEOUT = 15;
 		
 		System.out.println("RequestListenWorker started.");
 		for(;;){
@@ -55,6 +56,8 @@ class RequestListenWorker implements Runnable{
 					new Thread(new TicketWorker(ticket)).start();
 				}else if(tokens.length == 2){
 					Workers.ticketPool.put(tokens[0], DatabaseAccessor.queryDataset(tokens[0]));
+				}else if(tokens.length == 3){
+					Workers.ticketQueues.put(tokens[0], new TicketQueue(TIMEOUT));
 				}else{										//Annotation received
 					Workers.ticketQueues.get(tokens[0]).pop();
 				}
