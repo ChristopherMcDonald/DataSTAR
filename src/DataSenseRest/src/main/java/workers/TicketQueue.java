@@ -28,7 +28,7 @@ class DatasetDispatchWorker implements Runnable{
 			if(dataset.size() == 0){
 				break;
 			}
-			idx = ThreadLocalRandom.current().nextInt(0, dataset.size() + 1);
+			idx = ThreadLocalRandom.current().nextInt(0, dataset.size());
 			queue.add(dataset.remove(idx));					//Add a batch from the ticketpool to the queue
 		}
 	}

@@ -14,6 +14,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 class TicketWorker implements Runnable{
+	private TicketQueue queue;
 	private Ticket ticket;
 	
 	@Override
@@ -32,6 +33,7 @@ class TicketWorker implements Runnable{
 			if(ticket == null){
 				writer.println("-1,-1");
 			}else{
+				queue.setTimeout();
 				writer.println(ticket.getDatasetID() + "," + ticket.getResourceName());
 			}
 		}catch(IOException ioe){
@@ -39,7 +41,8 @@ class TicketWorker implements Runnable{
 		}
 	}
 	
-	public TicketWorker(Ticket ticket){
+	public TicketWorker(Ticket ticket, TicketQueue queue){
+		this.queue = queue;
 		this.ticket = ticket;
 	}
 }
@@ -63,7 +66,7 @@ class RequestListenWorker implements Runnable{
 				tokens = annotation.split(",");
 				if(tokens.length == 1){						//Ticket request
 					ticket = Workers.ticketQueues.get(tokens[0]).peek();
-					new Thread(new TicketWorker(ticket)).start();
+					new Thread(new TicketWorker(ticket, Workers.ticketQueues.get(tokens[0]))).start();
 				}else if(tokens.length == 2){
 					Workers.ticketPool.put(tokens[0], DatabaseAccessor.queryDataset(tokens[0]));
 				}else if(tokens.length == 3){
