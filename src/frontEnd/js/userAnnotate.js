@@ -1,79 +1,78 @@
-//text filter
-    jQuery.fn.filterByText = function(textbox, selectSingleMatch) {
-        return this.each(function() {
-            var select = this;
-            var options = [];
-            $(select).find('option').each(function() {
-                options.push({value: $(this).val(), text: $(this).text()});
-            });
-            $(select).data('options', options);
-            $(textbox).bind('change keyup', function() {
-                var options = $(select).empty().data('options');
-                var search = $(this).val().trim();
-                var regex = new RegExp(search,"gi");
-              
-                $.each(options, function(i) {
-                    var option = options[i];
-                    if(option.text.match(regex) !== null) {
-                        $(select).append(
-                           $('<option>').text(option.text).val(option.value)
-                        );
-                    }
-                });
-                if (selectSingleMatch === true && $(select).children().length === 1) {
-                    $(select).children().get(0).selected = true;
+
+jQuery.fn.filterByText = function(textbox, selectSingleMatch) {
+    return this.each(function() {
+        var select = this;
+        var options = [];
+        $(select).find('option').each(function() {
+            options.push({value: $(this).val(), text: $(this).text()});
+        });
+        $(select).data('options', options);
+        $(textbox).bind('change keyup', function() {
+            var options = $(select).empty().data('options');
+            var regex = new RegExp(search,"gi");
+          
+            $.each(options, function(i) {
+                var option = options[i];
+                if(option.text.match(regex) !== null) {
+                    $(select).append(
+                       $('<option>').text(option.text).val(option.value)
+                    );
                 }
-            });            
-        });
-    };
-
-    $(function() {
-        $('#select').filterByText($('#textbox1'), false);
-      $("select option").click(function(){
-        alert(1);
-      });
-    });
-
-
-
-    window.onload = function(){
-        axios.get("/next?userId=" + localStroge.getItem("userId"))
-        .then(res => { 
-            var source = res.data.ticket.link;
-            var options = res.data.options;
-            
-            localStorage.setItem("datasetId", res.data.data);
-
-            $("#dataImg").attr('src', source);
-            $("#select").html("");
-            options.forEach(option => {
-                $("#select").append($('<option/>', {
-                    value: option,
-                    text: option
-                }));
             });
-
-         })
-        .catch(error => {
-            console.error(error);
-            document.getElementById("thanksMsg").style.display = "block";
-            document.getElementById("annotation").style.display = "none";
-            
-        });
-    };
-    
-    $("#dataNextBtn").click(function(evt){
-        axios.post("/annotate", {
-            userId: localStorage.getItem("userId"),
-            datasetId: localStorage.getItem("datasetId"),
-            resourceName: $("#dataImg").attr('src'),
-            label: $("#select").selected.value
-        })
-        .then(res => {
-            
-        })
-        .catch(error => {})
+            if (selectSingleMatch === true && $(select).children().length === 1) {
+                $(select).children().get(0).selected = true;
+            }
+        });            
     });
+};
+
+$(function() {
+    $('#select').filterByText($('#textbox1'), false);
+  $("select option").click(function(){
+    alert(1);
+  });
+});
+
+
+
+window.onload = function(){
+    axios.get("http://localhost:3000/next?userId=" + localStorage.getItem("userId"))
+    .then(res => { 
+        var source = res.data.ticket.link;
+        var options = res.data.ticket.options;
+        
+        localStorage.setItem("datasetId", res.data.data);
+
+        $("#dataImg").attr('src', source);
+        $("#select").html("");
+        options.forEach(option => {
+            $("#select").append($('<option/>', {
+                value: option,
+                text: option
+            }));
+        });
+
+     })
+    .catch(error => {
+        console.error(error);
+        document.getElementById("thanksMsg").style.display = "block";
+        document.getElementById("annotation").style.display = "none";
+        
+    });
+};
+
+$("#dataNextBtn").click(function(evt){
+    axios.post("http://localhost:3000/annotate", {
+        userId: localStorage.getItem("userId"),
+        datasetId: localStorage.getItem("datasetId"),
+        resourceName: $("#dataImg").attr('src'),
+        label: $("#select").val()
+    })
+    .then(res => {
+        
+    })
+    .catch(error => {})
+});
     /*going through data in the dataset
     var showing = [1, 0, 0, 0, 0];
     var data = ['d0', 'd1', 'd2', 'd3', 'd4'];

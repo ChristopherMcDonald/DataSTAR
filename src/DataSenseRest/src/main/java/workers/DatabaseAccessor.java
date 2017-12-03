@@ -2,7 +2,6 @@ package workers;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import org.bson.types.ObjectId;
 
@@ -13,7 +12,6 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
-import com.mongodb.util.JSON;
 
 public class DatabaseAccessor{
 	private static DB database;
@@ -31,7 +29,6 @@ public class DatabaseAccessor{
 	 * @return All the dataset ids
 	 */
 	public static String[] queryDatasetIDs(){
-		@SuppressWarnings("unchecked")
 		BasicDBList results = (BasicDBList)database.getCollection("clients").distinct("datasets._id");
 		ArrayList<String> arr = new ArrayList<String>();
 		for(Object res : results) {

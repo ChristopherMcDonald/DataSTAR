@@ -22,9 +22,9 @@ document.getElementById('b2').onclick = function() {
 };
 
 $("#clientLoginBtn").click(function(evt){
-    var clientEmail = $("#clientLoginEmail");
-    var clientPwd = $("#clientLoginPwd");
-    axios.post("/clientLogin", {
+    var clientEmail = $("#clientLoginEmail").val();
+    var clientPwd = $("#clientLoginPwd").val();
+    axios.post("http://localhost:3000/clientLogin", {
         "email": clientEmail, 
         "password": clientPwd
     })
@@ -38,9 +38,9 @@ $("#clientLoginBtn").click(function(evt){
 });
 
 $("#userLoginBtn").click(function(evt){
-    var userEmail = $("#userLoginEmail");    
-    var userPwd = $("#userLoginPwd");
-    axios.post("/login", {
+    var userEmail = $("#userLoginEmail").val();    
+    var userPwd = $("#userLoginPwd").val();
+    axios.post("http://localhost:3000/login", {
         "email": userEmail, 
         "password": userPwd
     })

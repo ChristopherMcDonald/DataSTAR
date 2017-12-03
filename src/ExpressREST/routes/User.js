@@ -4,6 +4,10 @@ module.exports = (app, scrypt) => {
     var Client = require('../objects/Client.js');
     var scryptParameters = scrypt.paramsSync(0.1);
     var net = require('net');
+    
+    app.get('/test', (req, res) => {
+        res.status(200).send({res: "yo"});
+    });
 
     app.post('/login', (req, res) => {
         User.findOne({email: req.body.email.toLowerCase()}).then(user => {
@@ -79,9 +83,10 @@ module.exports = (app, scrypt) => {
     app.get('/next', (req, res) => {
         // takes in userID
         net.createServer((socket) => {
-            
+            console.log("made server");
             socket.on('data', (data) => {
-                var tokens = data.toString('utf8').split(',');
+                console.log("got ticket");
+                var tokens = data.toString('utf8').trim('\n').split(',');
                 Client.find({"datasets._id": tokens[0]}, (err, client) => {
                     if(client) {
                         client[0].datasets.forEach(dataset => {
@@ -99,10 +104,11 @@ module.exports = (app, scrypt) => {
             });
 
         }).listen(8081, 'localhost');
-        
+        console.log("going to listen to server");
         var client = net.connect(8080, 'localhost');
         client.write(req.query.userId);
         client.end();
+        console.log("all done");
     });
     
     app.post('/annotate', (req, res) => {
@@ -128,6 +134,17 @@ module.exports = (app, scrypt) => {
                     user.save((err,user) => {
                         if(err) res.status(500).send("unhandled error");
                         else res.status(200).send({res: "valid"});
+                    });
+                    
+                    client[0].datasets[0].resources.every(resource => {
+                        if(resource.link === req.body.resourceName) {
+                            resource.annotations.push(req.body.label);
+                            return false;
+                        }
+                        return true;
+                    });
+                    client[0].save((err,client) => {
+                        if(err) console.error("Annotations have failed to be added to the client.");
                     });
                 });
             }

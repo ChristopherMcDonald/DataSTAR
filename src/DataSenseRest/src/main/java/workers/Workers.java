@@ -30,9 +30,9 @@ class TicketWorker implements Runnable{
 			
 			writer = new PrintWriter(socket.getOutputStream(), true);
 			if(ticket == null){
-				writer.print("-1,-1");
+				writer.println("-1,-1");
 			}else{
-				writer.print(ticket.getDatasetID() + "," + ticket.getResourceName());
+				writer.println(ticket.getDatasetID() + "," + ticket.getResourceName());
 			}
 		}catch(IOException ioe){
 			ioe.printStackTrace();

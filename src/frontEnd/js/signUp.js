@@ -21,17 +21,18 @@ document.getElementById('f2').onclick = function() {
 
 
 $("#clientSignUpBtn").click(function(evt){
-    var clientName = $("#clientSignUpName");
-    var clientEmail = $("#clientSignUpEmail");
-    var clientPwd = $("#clientSignUpPwd");
+    evt.preventDefault();
+    var clientName = $("#clientSignUpName").val();
+    var clientEmail = $("#clientSignUpEmail").val();
+    var clientPwd = $("#clientSignUpPwd").val();
     
-    axios.post("/client", {
+    axios.post("http://localhost:3000/client", {
         "coname": clientName,
         "email": clientEmail, 
         "password": clientPwd
     })
     .then(res => {
-        window.location.href = "../html/clientLogin.html";
+        window.location.href = "../html/login.html";
     })
     .catch(error => {
         console.error(error);
@@ -39,17 +40,18 @@ $("#clientSignUpBtn").click(function(evt){
 });
 
 $("#userSignUpBtn").click(function(evt){
-    var userName = $("#userSignUpName");
-    var userEmail = $("#userSignUpEmail");
-    var userPwd = $("#userSignUpPwd");
+    evt.preventDefault();
+    var userName = $("#userSignUpName").val();
+    var userEmail = $("#userSignUpEmail").val();
+    var userPwd = $("#userSignUpPwd").val();
     
-    axios.post("/user", {
+    axios.post("http://localhost:3000/user", {
         "name": userName,
         "email": userEmail, 
         "password": userPwd
     })
     .then(res => {
-        window.location.href = "../html/userLogin.html";
+        window.location.href = "../html/login.html";
     })
     .catch(error => {
         console.error(error);
