@@ -21,7 +21,34 @@ document.getElementById('b2').onclick = function() {
     func(2);
 };
 
-function redirect() {
-    window.location.replace("userHome");
-    return false;
-}
+$("#clientLoginBtn").click(function(evt){
+    var clientEmail = $("#clientLoginEmail");
+    var clientPwd = $("#clientLoginPwd");
+    axios.post("/clientLogin", {
+        "email": clientEmail, 
+        "password": clientPwd
+    })
+    .then(res => {
+        localStorage.setItem("clientId", res.data.id);
+        window.location.href = "../html/clientHome.html";
+    })
+    .catch(error => {
+        console.error(error);
+    });
+});
+
+$("#userLoginBtn").click(function(evt){
+    var userEmail = $("#userLoginEmail");    
+    var userPwd = $("#userLoginPwd");
+    axios.post("/login", {
+        "email": userEmail, 
+        "password": userPwd
+    })
+    .then(res => {
+        localStorage.setItem("userId", res.data.user);
+        window.location.href = "../html/userHome.html";
+    })
+    .catch(error => {
+        console.error(error);
+    });
+});
