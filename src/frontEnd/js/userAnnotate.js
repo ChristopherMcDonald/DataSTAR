@@ -62,6 +62,7 @@ window.onload = function(){
 };
 
 $("#dataNextBtn").click(function(evt){
+    $("#dataNextBtn").attr("disabled", "true");
     axios.post("http://localhost:3000/annotate", {
         userId: localStorage.getItem("userId"),
         datasetId: localStorage.getItem("datasetId"),
@@ -69,9 +70,32 @@ $("#dataNextBtn").click(function(evt){
         label: $("#select").val()
     })
     .then(res => {
-        
+        axios.get("http://localhost:3000/next?userId=" + localStorage.getItem("userId"))
+        .then(res => { 
+            var source = res.data.ticket.link;
+            var options = res.data.ticket.options;
+            
+            localStorage.setItem("datasetId", res.data.data);
+
+            $("#dataImg").attr('src', source);
+            $("#select").html("");
+            options.forEach(option => {
+                $("#select").append($('<option/>', {
+                    value: option,
+                    text: option
+                }));
+            });
+
+         })
+        .catch(error => {
+            console.error(error);
+            document.getElementById("thanksMsg").style.display = "block";
+            document.getElementById("annotation").style.display = "none";
+            
+        });
     })
-    .catch(error => {})
+    .catch(error => {});
+    $("#dataNextBtn").removeAttr("disabled");
 });
     /*going through data in the dataset
     var showing = [1, 0, 0, 0, 0];

@@ -5,12 +5,12 @@ module.exports = (app, scrypt) => {
     var net = require('net');
 
     app.post('/clientLogin', (req, res) => {
-        console.log(req);
+
         Client.findOne({"logins.email": req.body.email.toLowerCase()}).then(client => {
             if(client) {
                 var loginInfo = client.logins.filter(login => login.email === req.body.email.toLowerCase())[0];
                 if(scrypt.verifyKdfSync(loginInfo.password, req.body.password)) {
-                    res.status(202).send({res: "valid", id: loginInfo._id});
+                    res.status(202).send({res: "valid", id: client._id});
                 } else res.status(401).send({description: "bad credentials"});
             }
             else res.status(401).send({description: "bad credentials"});

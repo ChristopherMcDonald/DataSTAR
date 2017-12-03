@@ -82,7 +82,7 @@ module.exports = (app, scrypt) => {
     
     app.get('/next', (req, res) => {
         // takes in userID
-        net.createServer((socket) => {
+        var server = net.createServer((socket) => {
             console.log("made server");
             socket.on('data', (data) => {
                 console.log("got ticket");
@@ -99,7 +99,8 @@ module.exports = (app, scrypt) => {
                     } else {
                         console.error("NOT VALID DATASET ID " + data.datasetId);
                     }
-                
+                    socket.destroy();
+                    server.close();
                 });
             });
 
