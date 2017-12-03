@@ -63,21 +63,29 @@
           </div>
         <hr class="divider">
         <div class="row" id="d0">
-            <div class="row">
-              <img src="../img/dog.jpg" width="400px" height="400px">
-            </div>
-            <div class="row">
-              <input id="textbox1" type="text" />
-              <select id="select1">
-                <option class="1" value="Dog">God</option>
-                <option class="2" value="Cat">Cats</option>
-                <option class="3" value="Cactus">Cactus</option>
-                <option class="4" value="Catapult">Catapult</option>
-                <option class="5" value="Catapult">Dog</option>
-              </select>
-            </div>
-        </div> <!-- end d0-->
+          <div class="text-center">
+            <button class="btn btn-success"onclick="next()">Start</button>
+          </div>
+        </div>
         <div class="row" id="d1" style="display: none">
+            <div class="text-center">
+            <img src="../img/dog.jpg" width="400px" height="400px">
+            </div>
+            <div class="row">
+              <div class="text-center">
+                <input id="textbox1" type="text" />
+                  <select id="select1">
+                    <option class="1" value="Dog">God</option>
+                    <option class="2" value="Cat">Cats</option>
+                    <option class="3" value="Cactus">Cactus</option>
+                    <option class="4" value="Catapult">Catapult</option>
+                    <option class="5" value="Catapult">Dog</option>
+                  </select>
+                <button onclick="next()">Next</button>
+              </div>
+            </div>
+            </div> <!-- end d1-->
+        <div class="row" id="d2" style="display: none">
           <img src="../img/god.jpg" width="400px" height="400px">
           <div class="row">
             <input id="textbox2" type="text" />
@@ -88,9 +96,10 @@
               <option class="4" value="Catapult">Catapult</option>
               <option class="5" value="Catapult">Dog</option>
             </select>
+            <button onclick="next()">Next</button>
           </div>
-          </div> <!-- end d1-->
-          <div class="row" id="d2" style="display: none">
+          </div> <!-- end d2-->
+          <div class="row" id="d3" style="display: none">
             <img src="../img/cacdog.jpg" width="400px" height="400px">
             <div class="row">
               <input id="textbox3" type="text" />
@@ -101,11 +110,12 @@
                 <option class="4" value="Catapult">Catapult</option>
                 <option class="5" value="Catapult">Dog</option>
               </select>
+            <button onclick="next()">Next</button>
           </div>
-        </div> <!-- end d2-->
-        <div class="row"> 
-          <button onclick="next()">Next</button>
-        </div>
+        </div> <!-- end d3-->
+        <div class="row" id="d4" style="display: none">
+            All done for today! Thank you!
+        </div> <!-- end d4-->
       </div>
     </div>
 

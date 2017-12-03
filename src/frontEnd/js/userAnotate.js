@@ -51,8 +51,8 @@
     //going through data in the dataset
 
     //user innerHTML when we have external data?
-    var showing = [1, 0, 0];
-    var data = ['d0', 'd1', 'd2'];
+    var showing = [1, 0, 0, 0, 0];
+    var data = ['d0', 'd1', 'd2', 'd3', 'd4'];
 
     function next() {
         var qElems = [];
@@ -64,8 +64,7 @@
                 qElems[i].style.display = 'none';
                 showing[i] = 0;
             if (i == showing.length - 1) {
-                qElems[0].style.display = 'block';
-                showing[0] = 1;
+                qElems[i].style.display = 'block';
             } else {
                 qElems[i + 1].style.display = 'block';
                 showing[i + 1] = 1;
