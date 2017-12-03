@@ -70,12 +70,12 @@ hr.divider {
 
 
 #myProgress {
-  width: 100%;
+  width: 600px;
   background-color: grey;
 }
 
-#myBar {
-  width: 100%;
+#myBar1 {
+  width: 600px;
   height: 30px;
   background-color: #D8870D;
   text-align: center; /* To center it horizontally (if you want) */
@@ -83,6 +83,22 @@ hr.divider {
   color: white; 
 }
 
+#myBar2 {
+  width: 600px;
+  height: 30px;
+  background-color: #D8870D;
+  text-align: center; /* To center it horizontally (if you want) */
+  line-height: 30px; /* To center it vertically */
+  color: white; 
+}
+#myBar3 {
+  width: 600px;
+  height: 30px;
+  background-color: #D8870D;
+  text-align: center; /* To center it horizontally (if you want) */
+  line-height: 30px; /* To center it vertically */
+  color: white; 
+}
 #myInput {
   background-image: url('/css/searchicon.png');
   background-position: 10px 12px;
