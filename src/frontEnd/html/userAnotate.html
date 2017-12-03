@@ -58,10 +58,54 @@
     <div class="container">
       <div class="bg-faded p-4 my-4">
         <hr class="divider">
-        <div class="text-center mt-3">
-            <h3>User Home</h3>
+          <div class="text-center mt-3">
+            <h3>Anotation</h3>
           </div>
         <hr class="divider">
+        <div class="row" id="d0">
+            <div class="row">
+              <img src="../img/dog.jpg" width="400px" height="400px">
+            </div>
+            <div class="row">
+              <input id="textbox1" type="text" />
+              <select id="select1">
+                <option class="1" value="Dog">God</option>
+                <option class="2" value="Cat">Cats</option>
+                <option class="3" value="Cactus">Cactus</option>
+                <option class="4" value="Catapult">Catapult</option>
+                <option class="5" value="Catapult">Dog</option>
+              </select>
+            </div>
+        </div> <!-- end d0-->
+        <div class="row" id="d1" style="display: none">
+          <img src="../img/god.jpg" width="400px" height="400px">
+          <div class="row">
+            <input id="textbox2" type="text" />
+            <select id="select2">
+              <option class="1" value="Dog">God</option>
+              <option class="2" value="Cat">Cats</option>
+              <option class="3" value="Cactus">Cactus</option>
+              <option class="4" value="Catapult">Catapult</option>
+              <option class="5" value="Catapult">Dog</option>
+            </select>
+          </div>
+          </div> <!-- end d1-->
+          <div class="row" id="d2" style="display: none">
+            <img src="../img/cacdog.jpg" width="400px" height="400px">
+            <div class="row">
+              <input id="textbox3" type="text" />
+              <select id="select3">
+                <option class="1" value="Dog">God</option>
+                <option class="2" value="Cat">Cats</option>
+                <option class="3" value="Cactus">Cactus</option>
+                <option class="4" value="Catapult">Catapult</option>
+                <option class="5" value="Catapult">Dog</option>
+              </select>
+          </div>
+        </div> <!-- end d2-->
+        <div class="row"> 
+          <button onclick="next()">Next</button>
+        </div>
       </div>
     </div>
 
@@ -75,6 +119,8 @@
     <!-- Bootstrap core JavaScript -->
     <script src="../vendor/jquery/jquery.min.js"></script>
     <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/userAnotate.js"></script>
+    <script src="../vendor/list.min.js"></script>
 
   </body>
 
