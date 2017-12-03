@@ -1,4 +1,5 @@
 # DataSense
+A platform which enables crowd-sourced annotations for data sets of any size to be used for machine learning.
 
 ## Mission Statement
 Accelerate the spread of machine learning to small- to mid-size companies
