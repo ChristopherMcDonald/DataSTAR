@@ -28,29 +28,53 @@
     };
 
     $(function() {
-        $('#select1').filterByText($('#textbox1'), false);
+        $('#select').filterByText($('#textbox1'), false);
       $("select option").click(function(){
         alert(1);
       });
     });
 
-    $(function() {
-        $('#select2').filterByText($('#textbox2'), false);
-      $("select option").click(function(){
-        alert(1);
-      });
+
+
+    window.onload = function(){
+        axios.get("/next?userId=" + localStroge.getItem("userId"))
+        .then(res => { 
+            var source = res.data.ticket.link;
+            var options = res.data.options;
+            
+            localStorage.setItem("datasetId", res.data.data);
+
+            $("#dataImg").attr('src', source);
+            $("#select").html("");
+            options.forEach(option => {
+                $("#select").append($('<option/>', {
+                    value: option,
+                    text: option
+                }));
+            });
+
+         })
+        .catch(error => {
+            console.error(error);
+            document.getElementById("thanksMsg").style.display = "block";
+            document.getElementById("annotation").style.display = "none";
+            
+        });
+    };
+    
+    $("#dataNextBtn").click(function(evt){
+        axios.post("/annotate", {
+            userId: localStorage.getItem("userId"),
+            datasetId: localStorage.getItem("datasetId"),
+            resourceName: $("#dataImg").attr('src'),
+            label: $("#select").selected.value
+        })
+        .then(res => {
+            
+        })
+        .catch(error => {})
     });
-
-    $(function() {
-        $('#select3').filterByText($('#textbox3'), false);
-      $("select option").click(function(){
-        alert(1);
-      });
-    });
-
-    //going through data in the dataset
-
-    //user innerHTML when we have external data?
+    /*going through data in the dataset
     var showing = [1, 0, 0, 0, 0];
     var data = ['d0', 'd1', 'd2', 'd3', 'd4'];
 
@@ -73,3 +97,5 @@
             }
         }      
     }
+*/
+

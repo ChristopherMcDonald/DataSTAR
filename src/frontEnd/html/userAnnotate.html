@@ -48,7 +48,7 @@
                 <a class="nav-link text-uppercase text-expanded" href="userProfile.html">Profile</a>
                 </li>
                 <li class="nav-item px-lg-3">
-                <a class="nav-link active text-uppercase text-expanded" href="userAnotate.html">Anotate</a>
+                <a class="nav-link active text-uppercase text-expanded" href="userAnnotate.html">Annotate</a>
                 </li>
             </ul>
             </div>
@@ -62,60 +62,23 @@
             <h3>Anotation</h3>
           </div>
         <hr class="divider">
-        <div class="row" id="d0">
-          <div class="text-center">
-            <button class="btn btn-success"onclick="next()">Start</button>
-          </div>
-        </div>
-        <div class="row" id="d1" style="display: none">
+
+        <div class="row" id="annotation">
             <div class="text-center">
-            <img src="../img/dog.jpg" width="400px" height="400px">
+            <img width="400px" height="400px" id="dataImg">
             </div>
             <div class="row">
               <div class="text-center">
                 <input id="textbox1" type="text" />
-                  <select id="select1">
-                    <option class="1" value="Dog">God</option>
-                    <option class="2" value="Cat">Cats</option>
-                    <option class="3" value="Cactus">Cactus</option>
-                    <option class="4" value="Catapult">Catapult</option>
-                    <option class="5" value="Catapult">Dog</option>
-                  </select>
-                <button onclick="next()">Next</button>
+                  <select id="select"></select>
+                <button id="dataNextBtn">Next</button>
               </div>
             </div>
             </div> <!-- end d1-->
-        <div class="row" id="d2" style="display: none">
-          <img src="../img/god.jpg" width="400px" height="400px">
-          <div class="row">
-            <input id="textbox2" type="text" />
-            <select id="select2">
-              <option class="1" value="Dog">God</option>
-              <option class="2" value="Cat">Cats</option>
-              <option class="3" value="Cactus">Cactus</option>
-              <option class="4" value="Catapult">Catapult</option>
-              <option class="5" value="Catapult">Dog</option>
-            </select>
-            <button onclick="next()">Next</button>
-          </div>
-          </div> <!-- end d2-->
-          <div class="row" id="d3" style="display: none">
-            <img src="../img/cacdog.jpg" width="400px" height="400px">
-            <div class="row">
-              <input id="textbox3" type="text" />
-              <select id="select3">
-                <option class="1" value="Dog">God</option>
-                <option class="2" value="Cat">Cats</option>
-                <option class="3" value="Cactus">Cactus</option>
-                <option class="4" value="Catapult">Catapult</option>
-                <option class="5" value="Catapult">Dog</option>
-              </select>
-            <button onclick="next()">Next</button>
-          </div>
-        </div> <!-- end d3-->
-        <div class="row" id="d4" style="display: none">
+
+        <div class="row" id="thanksMsg" style="display: none">
             All done for today! Thank you!
-        </div> <!-- end d4-->
+        </div> 
       </div>
     </div>
 
@@ -131,7 +94,7 @@
     <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="../vendor/list.min.js"></script>
-    <script src="../js/userAnotate.js"></script>
+    <script src="../js/userAnnotate.js"></script>
 
   </body>
 
