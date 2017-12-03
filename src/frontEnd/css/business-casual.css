@@ -46,6 +46,7 @@ h1 {
 
 .bg-faded {
   background-color: rgba(255, 255, 255, 0.9);
+  margin: auto;
 }
 
 .bg-overlay {
@@ -56,6 +57,19 @@ hr.divider {
   border-color: #292b2c;
   max-width: 200px;
 }
+
+
+.carousel-inner > .item > img, 
+.carousel-inner > .item > a > img{
+  margin: auto;
+}
+
+.carouselBox{
+  width: 800px;
+  height: 650px;
+}
+
+
 #myProgress {
   width: 100%;
   background-color: grey;
