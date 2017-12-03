@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 class DatasetDispatchWorker implements Runnable{
 	private static int NUM_TO_ADD = 15;
@@ -13,6 +14,7 @@ class DatasetDispatchWorker implements Runnable{
 	public void run(){
 		ArrayList<Ticket> dataset;
 		String previousDatasetID, datasetID;
+		int idx;
 
 		if(queue.size() > 0){
 			previousDatasetID = queue.getLast().getDatasetID();
@@ -26,7 +28,8 @@ class DatasetDispatchWorker implements Runnable{
 			if(dataset.size() == 0){
 				break;
 			}
-			queue.add(dataset.remove(0));					//Add a batch from the ticketpool to the queue
+			idx = ThreadLocalRandom.current().nextInt(0, dataset.size() + 1);
+			queue.add(dataset.remove(idx));					//Add a batch from the ticketpool to the queue
 		}
 	}
 

@@ -1,40 +1,10 @@
-*** IDEAS ***
-Datascription (The Labeler) ($$$) (5 votes)
-	- ML Data labeler allowing easy customization
-	Pros:
-		* Everything is familiar
-		* Flashy
-		* Largest value proposition/fast first sell
-		* Belongs to a track
-		* ML buzz
-	Cons:
-		* Potential for malicious data entry
-		* Difficult Front-End
-
 *** RESPONSIBILITIES ***
 
-Chris:
-- Database design
-- Dev Ops
-- Info Sec
-- Server endpoint creation
 - Marketing Plan
-Eric:
-- Point of Contact
-- Scrum-master
-- Algorithm Design
-- Data Collection
-- ML Design
-Sharon:
-- Morale / Making room not stink
-- Translate design -> Front-end
 - Linking Back-/Front-End
-- Testing/User Feedback
-Desiigner:
 - Design work
 - Market Research (demand, competitors, etc.)
 - Presentation design
-- Whitepaper design
 
 
 *** DataGold/DataSense/DataSource ***
@@ -49,18 +19,7 @@ Ticket Allocation Workers:
 * Pops head of queue when confirmation received
 
 Dispatch Worker:
-* Receives a clientID and a previous dataset (can be null)
-* Randomly selects new dataset to pick from
 * Companies can pay a premium to make their dataset more likely to be selected
-* Appends 15 (or less if less available) tickets from that set's ticket pool to the user's queue
-
-User Annotation Worker:
-
-Timeout Check Worker:
-
-Tickets:
-* Resource name
-* Dataset ID
 
 Clients' Request:
 * Takes in directory with possible subdirectories
@@ -71,16 +30,34 @@ Clients' Request:
 * Hold data for some set amount of time if payment not received
 
 Clients' Response:
-* Progress shown incrementally
 * Send full dataset when done, each folder contains the resources marked as that target
 * Generate report containing info such as distribution of data, confidence margins, etc.
 
 
-Pay Scheme:
+***** Market Research *****
+Competitors:
+* https://www.clickworker.com/machine-learning-ai-artificial-intelligence/
+	- Direct competitor
+	- Not a specialist (AI was not even in their top 3 listed services)
+* https://www.crowdflower.com/
+	- Direct competitor
+	- Not well established (on 4th page of a search for their service)
+	- Poor reviews
+* https://www.samasource.org/machinelearning
+	- Indirect competition -- they have an in-house team
+	- Great looking product
 
-User Payout System:
+***** Who are we? *****
+Three software engineering students from Canada who are passionate about changing the world.
 
-Dataset:
+***** What did we make? *****
+We created a system which will assist machine learning practitioners across the globe make sense of their data. DataSense will use the power of crowdsourcing to annotate unlabelled data of all kinds -- from audio to text to image and even video!
 
-Interface:
-* Auto-complete text field if > 10 (or whatever arbitrary number)
+***** Notable Technical Features *****
+* Extremely concurrent -- 4 different types of worker threads were used to ensure a highly scalable system
+* Our REST API promotes secure and seamless server communication
+* Hashed passwords, randomly generated user ids and various other steps taken to ensure security for all users
+* Node.js utilized to further promote simple scalability
+* Extensive market research performed
+* Thorough study of economically optimized pricing plans including services such as varying levels of redundant annotation and faster time to annotation
+* Custom algorithms designed for tasks such as user rankings and allocation of annotation tickets
