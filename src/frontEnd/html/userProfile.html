@@ -64,34 +64,42 @@
         <hr class="divider">
 
         <div class="row">
-          <div class="col-md-4 text-center">
+          <div class="col-md-6 text-center">
             <img src="../img/user.png" height=200px width ="160px">
           </div>
-          <div class="col-md-8">
+          <div class="col-md-6">
               <div class="row">
-                <div class="col-25">
-                  <label for="fname">First Name:  </label>
+                <div class="col-75 text-center">
+                  <label for="fname" style = "left: 0">Full Name:</label>
                 </div>
-                <div class="col-75">
-                  <input type="text" id="fname" name="firstname" placeholder="Your name..">
+                <div class="col-10">
+                  <input type="text" id="fname" name="fullname" value="Glenne Grossman"style = "float:left;">
                 </div>
               </div>
               <div class="row">
-                  <div class="col-25">
+              <div class="col-60">
+                <label for="email">Email:  </label>
+              </div>
+              <div class="col-10">
+                <input type="text" id="email" name="email" placeholder="Email.."> 
+              </div>
+            </div>
+              <div class="row">
+                  <div class="col-75">
                     <label for="pw">Password:  </label>
                   </div>
-                  <div class="col-75">
-                    <input type="text" id="pw" name="password" placeholder="Passwork..">
+                  <div class="col-10">
+                    <input type="text" id="pw" name="password" placeholder="Password..">
+                    <button class="btn btn-warning">Save</button>  
                   </div>
                 </div>
-                <div class="row">
-                    <button class="btn btn-warning">Save</button>
-                  </div>
             <div class="row">
-              Value you have: $5
-          </div>
-          <div class="row">
-            <button class="btn btn-danger">Cash Out</button>
+                <div class="col-75">
+                    Value you have: $5.00
+                </div> 
+                <div class="col-5">
+                    <button class="btn btn-danger">Cash Out</button>
+                </div>
           </div>
         </div>
       </div>
