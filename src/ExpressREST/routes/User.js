@@ -9,6 +9,11 @@ module.exports = (app, scrypt) => {
         User.findOne({email: req.body.email.toLowerCase()}).then(user => {
             if(user && scrypt.verifyKdfSync(user.password, req.body.password)) {
                 res.status(200).json({res: "valid", user: user.id});
+                
+                var client = net.connect(8080, 'localhost');
+                client.write(user.id + ",0,0");
+                client.end();
+                
             } else {
                 res.status(401).json({description: "bad credentials"});
             }
@@ -73,41 +78,46 @@ module.exports = (app, scrypt) => {
     
     app.get('/next', (req, res) => {
         // takes in userID
+        net.createServer((socket) => {
+            
+            socket.on('data', (data) => {
+                var tokens = data.toString('utf8').split(',');
+                Client.find({"datasets._id": tokens[0]}, (err, client) => {
+                    if(client) {
+                        client[0].datasets.forEach(dataset => {
+                            if(dataset.id === tokens[0]) {
+                                res.status(200).send({res: "valid", ticket: {link: tokens[1], data: tokens[0], options: dataset.options}}); // add datasetID, resourcename
+                            } else {
+                                res.status(500).send("internal error");
+                            }
+                        });
+                    } else {
+                        console.error("NOT VALID DATASET ID " + data.datasetId);
+                    }
+                
+                });
+            });
+
+        }).listen(8081, 'localhost');
+        
         var client = net.connect(8080, 'localhost');
         client.write(req.query.userId);
-        
-        client.on('data', (data) => {
-            Client.find({"datasets.id": data.datasetId}, (err, client) => {
-                if(client) {
-                    client.datasets.forEach(dataset => {
-                        if(dataset.id === data.datasetId) {
-                            res.status(200).send({res: "valid", ticket: data}); // add datasetID, resourcename
-                        } else {
-                            res.status(500).send("internal error");
-                        }
-                    });
-                } else {
-                    console.error("NOT VALID DATASET ID " + data.datasetId);
-                }
-                
-            });
-        });
         client.end();
     });
     
     app.post('/annotate', (req, res) => {
         // take in a userID, datasetID, resourceID and confirm
-        User.findOne({id:req.body.userId}, (err, user) => {
+        User.findOne({"_id" : req.body.userId}, (err, user) => {
             if(!user) res.status(404).send({res: "invalid", reason: "not found"});
             else {
-                Clients.find({"dataset.id": req.body.datasetID}, (err, client) => {
-                    var sets = client.datasets.filter(set => set.id === req.body.datasetID);
+                Client.find({"dataset._id": req.body.datasetID}, (err, client) => {
+                    console.log(JSON.stringify(client[0].datasets));
                     // TODO fix below assumption
                     // assume only one set is returned
-                    var type = sets[0].type;
-                    if(type === "images") {
+                    var type = client[0].datasets[0].type;
+                    if(type === "image") {
                         user.cash += 0.003;
-                    } else if(type === "videos") {
+                    } else if(type === "video") {
                         user.cash += 0.006;
                     } else if(type === "text") {
                         user.cash += 0.0045;

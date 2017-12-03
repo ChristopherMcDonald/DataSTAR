@@ -27,8 +27,9 @@ class TicketWorker implements Runnable{
 		try{
 			address = InetAddress.getByName(host);
 			socket = new Socket(address, port);
+			
 			writer = new PrintWriter(socket.getOutputStream(), true);
-			writer.println(ticket.getDatasetID() + "," + ticket.getResourceName());
+			writer.print(ticket.getDatasetID() + "," + ticket.getResourceName());
 		}catch(IOException ioe){
 			ioe.printStackTrace();
 		}

@@ -32,8 +32,12 @@ public class DatabaseAccessor{
 	 */
 	public static String[] queryDatasetIDs(){
 		@SuppressWarnings("unchecked")
-		List<String> results = database.getCollection("clients").distinct("id");
-		return results.toArray(new String[0]);
+		BasicDBList results = (BasicDBList)database.getCollection("clients").distinct("datasets._id");
+		ArrayList<String> arr = new ArrayList<String>();
+		for(Object res : results) {
+			arr.add(res.toString());
+		}
+		return arr.toArray(new String[0]);
 	}
 
 	/**
@@ -58,11 +62,12 @@ public class DatabaseAccessor{
 					DBObject resource = (DBObject) resourceItem;
 					numComplete = ((BasicDBList)resource.get("annotations")).size();
 					if(tier != numComplete + (int)resource.get("pending")){
-						resource.put("pending", numComplete + (int)resource.get("pending"));
-						collection.update(resource, resource);
+						resource.put("pending", tier - numComplete);
+//						collection.update(resource, resource);
 					}
 				}
 			}
+			collection.save(client);
 		}
 	}
 
