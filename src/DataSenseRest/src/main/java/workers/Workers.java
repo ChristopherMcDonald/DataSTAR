@@ -29,7 +29,11 @@ class TicketWorker implements Runnable{
 			socket = new Socket(address, port);
 			
 			writer = new PrintWriter(socket.getOutputStream(), true);
-			writer.print(ticket.getDatasetID() + "," + ticket.getResourceName());
+			if(ticket == null){
+				writer.print("-1,-1");
+			}else{
+				writer.print(ticket.getDatasetID() + "," + ticket.getResourceName());
+			}
 		}catch(IOException ioe){
 			ioe.printStackTrace();
 		}
