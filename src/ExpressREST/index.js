@@ -4,16 +4,10 @@ const app = express();
 var bodyParser = require('body-parser');
 app.use(bodyParser.json());
 app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Origin", "*"); // TODO close off for only localhost:8000
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
 });
-// var formidable = require('express-formidable');
-// app.use(formidable({
-//     encoding: 'utf-8',
-//     uploadDir: '/upload/',
-//     multiples: true
-// }));
 
 var mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
